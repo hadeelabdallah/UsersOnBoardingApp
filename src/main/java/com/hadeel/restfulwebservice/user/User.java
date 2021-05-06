@@ -1,5 +1,7 @@
 package com.hadeel.restfulwebservice.user;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
+@ApiModel(description = "This is the user object in the system")
 public class User {
 
     private Integer id;
@@ -17,6 +20,7 @@ public class User {
     private String name;
 
     @Past
+    @ApiModelProperty(notes = "Birthdate cannot be in the past")
     private Date birthDate;
 
     @Override
