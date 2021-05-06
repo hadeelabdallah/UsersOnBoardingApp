@@ -1,6 +1,10 @@
 package com.hadeel.restfulwebservice.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,12 +24,16 @@ public class UserResource {
     }
 
     @GetMapping( "/users/{id}")
-    public User findUser(@PathVariable int id){
+    public EntityModel<User> findUser(@PathVariable int id){
         User user = userDaoService.findOne(id);
         if(user == null){
             throw new UserNotFoundException("id-"+id);
         }
-        return user;
+        //HATEOAS
+        EntityModel<User> resource = EntityModel.of(user);
+        WebMvcLinkBuilder webMvcLinkBuilder = linkTo(methodOn(this.getClass()).retrieveAll());
+        resource.add(webMvcLinkBuilder.withRel("all-users"));
+        return resource;
     }
 
     @DeleteMapping( "/users/{id}")
