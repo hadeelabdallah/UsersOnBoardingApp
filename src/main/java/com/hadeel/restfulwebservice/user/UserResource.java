@@ -7,10 +7,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
@@ -45,9 +46,10 @@ public class UserResource {
     }
 
     @PostMapping("/users")
-    public ResponseEntity createUser(@Valid @RequestBody User user){
+    public ResponseEntity createUser(@Valid @RequestBody User user, HttpServletRequest request) throws URISyntaxException {
         User saved = userDaoService.save(user);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(saved.getId()).toUri();
+        URI location = new URI(request.getRequestURL() +"/" + saved.getId());
+       // URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(saved.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 }
