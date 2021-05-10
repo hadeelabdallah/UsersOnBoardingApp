@@ -10,9 +10,11 @@ import org.hibernate.annotations.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,6 +22,12 @@ import java.util.Date;
 @ApiModel(description = "This is the user object in the system")
 @Entity
 public class User {
+
+    public User(Integer id, String name, Date birthDate) {
+        this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+    }
 
     @Id
     @GeneratedValue
@@ -31,6 +39,9 @@ public class User {
     @Past
     @ApiModelProperty(notes = "Birthdate cannot be in the past")
     private Date birthDate;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 
     @Override
     public String toString() {
